@@ -1,0 +1,92 @@
+{
+  "contractAddress": "0x613Ccb8a943179c0d56c2A194F69261f7108F82A",
+  "account": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+  "chain": {
+    "id": 61999,
+    "name": "Genlayer Studio Network",
+    "rpc": "https://studio.genlayer.com/api"
+  },
+  "historicalFailureTx": {
+    "action": "probe_target(0)",
+    "url": "https://1.1.1.1",
+    "reason": "301 Redirect without automatic follow causing UserError in GenVM",
+    "txHash": "0xc53d6b6eb5e8d1e37a2707ec5f3e2615c49b000634ff6b195f5f25f78b5b6fa8",
+    "resultName": "MAJORITY_DISAGREE",
+    "status": 7
+  },
+  "successfulClosureTx": {
+    "action": "probe_target(1)",
+    "target": {
+      "id": 1,
+      "name": "Drand Genesis Round",
+      "url": "https://api.drand.sh/public/1"
+    },
+    "registerTxHash": "0xf40b36b0d857f03039207a5c0f124d00e7c1ebf916a4dd00f036d7f1430c4ae7",
+    "probeTxHash": "0x03c5b525e12f81cf36f64edc30095af6fd0bfe3b921097b34e3b2a70e4865960",
+    "probeDurationSec": "39.7",
+    "resultName": "MAJORITY_AGREE",
+    "resultCode": 6,
+    "status": 7,
+    "votes": {
+      "0x628f4d491b8753Be1eD022f6D920853b8b541937": "agree",
+      "0x7eFf7A59cf5cF0aA88817b5683d3F99caac1D4F9": "agree",
+      "0xD2762A898b8262acB88024bf7d5Bb4336375cF22": "idle",
+      "0xDc5B687ca37c3C65a16Dd456e6Ce4CF8Be2FfC9d": "idle",
+      "0xf20Cb474E5be2f56EA6Be925D057c28f458270da": "agree"
+    },
+    "finalState": {
+      "id": 1,
+      "name": "Drand Genesis Round",
+      "url": "https://api.drand.sh/public/1",
+      "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+      "probed_count": 1,
+      "last_status": "active",
+      "last_result": {
+        "is_alive": true,
+        "sample": "b'{\"round\":1,\"randomness\":\"101297f1ca7dc44ef6088d94ad5fb7ba03455",
+        "status_code": 200
+      }
+    }
+  },
+  "stateComparison": {
+    "target0": {
+      "id": 0,
+      "name": "Cloudflare DNS",
+      "url": "https://1.1.1.1",
+      "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+      "probed_count": 0,
+      "last_status": "registered",
+      "last_result": null
+    },
+    "target1Before": {
+      "id": 1,
+      "name": "Drand Genesis Round",
+      "url": "https://api.drand.sh/public/1",
+      "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+      "probed_count": 0,
+      "last_status": "registered",
+      "last_result": null
+    },
+    "target1After": {
+      "id": 1,
+      "name": "Drand Genesis Round",
+      "url": "https://api.drand.sh/public/1",
+      "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+      "probed_count": 1,
+      "last_status": "active",
+      "last_result": {
+        "is_alive": true,
+        "sample": "b'{\"round\":1,\"randomness\":\"101297f1ca7dc44ef6088d94ad5fb7ba03455",
+        "status_code": 200
+      }
+    },
+    "totalCount": 2
+  },
+  "closureMetrics": {
+    "isTarget1Active": true,
+    "isCountIncremented": true,
+    "isSamplePresent": true,
+    "isTarget0Preserved": true,
+    "allVerified": true
+  }
+}
