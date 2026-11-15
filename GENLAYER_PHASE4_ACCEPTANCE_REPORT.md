@@ -79,4 +79,4 @@ Stable Studionet（Chain ID 61999）归档记录显示，五笔交易的 `gasUse
 - `audit-package/readback_results.json`：LATEST_FINAL 状态读回。
 - `audit-package/fee_audit.json`：Gas 使用量与实际费用。
 - `audit-package/git_security_audit.md`：仓库安全扫描报告。
-- `audit-package/git_history.txt`：脱敏后的公开历史快照。
+- `audit-package/git_history.txt`：脱敏提交历史摘要。

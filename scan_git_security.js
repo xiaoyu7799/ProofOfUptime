@@ -63,7 +63,8 @@ function checkIgnored(samplePath) {
 function runAudit() {
   const currentHeadSha = git(['rev-parse', 'HEAD']);
   const rawHistory = git(['log', '-p', '--all']);
-  const sanitizedHistory = redactLocalPaths(rawHistory);
+  const historySummary = git(['log', '--all', '--date=iso-strict', '--format=commit %H%nAuthor: %an <%ae>%nDate: %ad%n    %s', '--stat']);
+  const sanitizedHistory = redactLocalPaths(historySummary);
   const historyPath = path.join(repoDir, 'audit-package', 'git_history.txt');
   fs.mkdirSync(path.dirname(historyPath), { recursive: true });
   fs.writeFileSync(historyPath, sanitizedHistory + '\n', 'utf8');
@@ -161,7 +162,7 @@ function runAudit() {
     '## Repository and history notes',
     '',
     '- Origin: ' + originUrl,
-    '- audit-package/git_history.txt is a path-redacted public snapshot of git log -p through the audit HEAD.',
+    '- audit-package/git_history.txt is a path-redacted commit metadata and diffstat summary; raw git log -p is scanned for credentials but not exported.',
     '- Existing Git commit objects were not rewritten; older commit pages may still retain historical local-path strings in their original diffs.',
     '- If .secrets/wallet.json is absent, wallet-fingerprint comparison is explicitly SKIPPED and is not reported as verified.',
     ''

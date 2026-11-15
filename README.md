@@ -127,7 +127,7 @@ def validate(leader_result) -> bool:
 - `readback_results.json`：`LATEST_FINAL` 状态读回。
 - `fee_audit.json`：Gas 使用量、有效单价与实际手续费。
 - `git_security_audit.md`：安全扫描结果。
-- `git_history.txt`：已清理本地绝对路径的公开历史快照。
+- `git_history.txt`：脱敏提交历史摘要。
 
 六份审计文件的最新 SHA-256 与字节数以最终闭环报告中的完整性清单为准。
 
