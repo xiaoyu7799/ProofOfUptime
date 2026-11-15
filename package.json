@@ -4,7 +4,9 @@
   "description": "Decentralized Service Availability Oracle on GenLayer",
   "main": "run_success_consensus.js",
   "scripts": {
+    "test": "npm run test:unit && npm run test:security",
     "test:unit": "python tests/unit_test.py",
+    "test:security": "node tests/security_scanner_test.js",
     "export:audit": "node export_audit_data.js",
     "scan:security": "node scan_git_security.js"
   },
