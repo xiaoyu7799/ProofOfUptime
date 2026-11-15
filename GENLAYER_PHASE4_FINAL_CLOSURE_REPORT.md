@@ -1,171 +1,159 @@
-# GenLayer Phase 4 — ProofOfUptime 最终闭环验收报告 (含完整审计包)
+# GenLayer Phase 4 — ProofOfUptime 最终交付闭环验收报告 (含完整审计包与交付收尾)
 
 **报告文件**：`GENLAYER_PHASE4_FINAL_CLOSURE_REPORT.md`  
 **测试工作区**：`E:\gemini\genlayer-phase4-test`  
 **审计证据包**：`E:\gemini\genlayer-phase4-test\audit-package/`  
-**验收完成时间**：2026-11-16 03:58:30 (UTC+8) / 2026-11-15T19:58:30Z (UTC)  
 **智能合约名称**：ProofOfUptime (去中心化公共服务可用性公证合约)  
 **目标网络**：GenLayer Stable Studionet (Chain ID: `61999`, RPC: `https://studio.genlayer.com/api`)  
-**关键闭环 Commit**：`37baa204b6a2f34b2125e00ce9fd19573963231d`  
-**最新文档 Commit**：`3425c92431f4d9b3d25d901112af38ddca539827`  
-**最终独立审计结论**：**`PHASE 4 — FULLY VERIFIED`**
+**合约部署地址**：`0x613Ccb8a943179c0d56c2A194F69261f7108F82A`  
+**测试钱包地址**：`0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121`  
+**综合审计判定**：**`PHASE 4 — FULLY VERIFIED`**
 
 ---
 
-## 一、审计执行摘要与证据包归档
+## 一、三层交付状态明确界定 (禁止混淆与未完成项虚报)
 
-本报告在前期开发与真实链上执行的基础上，完成了**全量证据审计包（Audit Package）的归档与多维交叉核验**。所有核心链上回执、验证者共识投票、只读状态变迁与安全审计数据已全部以机器可读格式导出至 `audit-package/`：
+按照工程交付与验收规范，将本次 Phase 4 的交付完成状态严格区分为三个独立维度：
 
-- **`audit-package/transaction_receipts.json`** (681 KB)：包含全部 5 笔链上交易的原始 transaction 对象与回执数据。
-- **`audit-package/consensus_votes.json`** (86 KB)：包含失败探测与成功探测两笔交易的完整验证者投票分布、共识枚举与判定。
-- **`audit-package/readback_results.json`** (4 KB)：包含 Target 0 与 Target 1 基于 `LATEST_FINAL` 的链上只读原始数据及前后状态严格对照。
-- **`audit-package/fee_audit.json`** (4 KB)：包含测试钱包真实余额（0 WEI）、GasPrice（0x0）及协议层费用豁免审计。
-- **`audit-package/git_security_audit.md`** (4 KB)：包含全量 Git 历史的私钥 SHA-256 指纹扫描结果（0 泄露）与 Commit 演进关系。
-- **`audit-package/git_history.txt`** (112 KB)：包含自初始化以来的完整 `git log -p` 补丁记录。
-
----
-
-## 二、项目、网络与合约核心参数
-
-| 配置项 | 详细参数与链上凭据 | 证据支撑文件 |
-| :--- | :--- | :--- |
-| **网络名称** | Genlayer Studio Network (Stable Studionet) | `fee_audit.json` |
-| **Chain ID** | `61999` (`0xf22f`) | `fee_audit.json` |
-| **RPC 节点** | `https://studio.genlayer.com/api` | `fee_audit.json` |
-| **合约地址** | `0x613Ccb8a943179c0d56c2A194F69261f7108F82A` | `readback_results.json` |
-| **测试钱包地址** | `0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121` | `fee_audit.json` |
-| **SDK 驱动版本** | `genlayer-js: 1.1.8` | `package.json` |
+| 交付维度 | 实际完成状态 | 详细状态说明与核验凭据 |
+| :--- | :---: | :--- |
+| **1. 链上验收状态** | **`COMPLETED` (已完成/已验证)** | 合约部署、两次目标注册、失败探测（301 触发 `MAJORITY_DISAGREE` 回滚）、成功探测（200 达成 `MAJORITY_AGREE` 推进）及 `LATEST_FINAL` 链上读回验证全部闭环，5 笔交易全部达成 `FINALIZED` (状态码 7)。 |
+| **2. Git 本地归档状态** | **`COMPLETED` (已完成/工作区干净)** | 本地仓库提交历史完整连续，六份审计原始文件全部物理落盘于 `audit-package/` 并在本地提交，工作树保持绝对干净，敏感私钥隔离完好。 |
+| **3. GitHub 远程推送状态** | **`NOT COMPLETED` (未完成/本地隔离)** | 本地仓库未配置任何远程仓库 URL（`git remote -v` 为空），所有提交与证据均完整保存在本地 Git 仓库中。根据严格交付红线，**未向远程 GitHub 推送，禁止标为已完成**。 |
 
 ---
 
-## 三、五笔真实链上交易全景核查 (更正交易计数)
+## 二、审计归档六份文件清单真实性核验
 
-在此前报告总结中曾误将交易记为 4 笔，经底层交易记录严格核验，本合约全生命周期**实际确凿发生了 5 笔真实链上交易**，每一笔均已从 RPC 完整导出至 `audit-package/transaction_receipts.json`：
+所有链上底层回执、验证者共识投票记录、状态机读回快照、费用审计及 Git 安全扫描文件真实存在于 `audit-package/` 目录：
 
-| 序号 | 交易类别 | 调用方法 / 目标 | 完整交易哈希 (Tx Hash) | 达成耗时 | 最终状态 | 共识判定 |
-| :---: | :--- | :--- | :--- | :---: | :---: | :---: |
-| **1** | **合约部署** | `deployContract(ProofOfUptime)` | `0x95062b39e8cae8be5307927b445728c34529353c264e57c167283bd63a4c8bcb` | 41.5s | `FINALIZED` (7) | SUCCESS |
-| **2** | **目标注册 0** | `register_target("Cloudflare DNS", "https://1.1.1.1")` | `0xd541429e2aebce353ff8fb82daf677675d82d5ce17468e8816df2dd3296ec976` | 39.6s | `FINALIZED` (7) | SUCCESS |
-| **3** | **失败探测 0** | `probe_target(0)` (301 重定向导致) | `0xc53d6b6eb5e8d1e37a2707ec5f3e2615c49b000634ff6b195f5f25f78b5b6fa8` | 64.7s | `FINALIZED` (7) | **`MAJORITY_DISAGREE`** |
-| **4** | **目标注册 1** | `register_target("Drand Genesis Round", "https://api.drand.sh/public/1")` | `0xf40b36b0d857f03039207a5c0f124d00e7c1ebf916a4dd00f036d7f1430c4ae7` | 37.8s | `FINALIZED` (7) | SUCCESS |
-| **5** | **成功探测 1** | `probe_target(1)` (稳定 200 源达成共识) | `0x03c5b525e12f81cf36f64edc30095af6fd0bfe3b921097b34e3b2a70e4865960` | 39.7s | `FINALIZED` (7) | **`MAJORITY_AGREE`** |
-
----
-
-## 四、两笔探测交易共识投票深度审计 (`consensus_votes.json`)
-
-两笔非确定性探测交易在相同合约上形成了严密的共识对照组，证据表明验证者节点严格执行了独立的外部抓取与业务逻辑审查：
-
-### 1. 失败共识交易：`probe_target(0)`
-- **交易 Hash**：`0xc53d6b6eb5e8d1e37a2707ec5f3e2615c49b000634ff6b195f5f25f78b5b6fa8`
-- **目标 URL**：`https://1.1.1.1`
-- **分歧根本原因**：经网络探针证实，`1.1.1.1` 服务端返回 `301 Moved Permanently`（跳转至 `https://one.one.one.one/`），GenVM 的 `gl.nondet.web.get` 不自动跳转，导致 `res.status == 301` 触发了合约内的 `raise gl.vm.UserError("Target probe returned non-200 status")`，各节点产生 `exit_code 1`。
-- **共识判定**：`MAJORITY_DISAGREE`（共识枚举代码：7）。
-- **验证者投票明细**：
-  - `0xeA908540c5FBB68Da844cC1BE5eaC8b23391e908`: `disagree`
-  - `0xc4Ab6B9D74c72EB38D43645318Bb4aFb518a09be`: `disagree`
-  - `0x5D4dD8d9f034c2fC742A1bE9C6d71D985d4D5Ac4`: `disagree`
-  - `0x7d74A02562B3C443A6b12FE7996Bc5c9A578554E`: `idle`
-  - `0xDc3C84a9Bc42d0b91219c27B00bbbA8CA0F0259A`: `idle`
-  （3 票 Disagree 形成多数派阻断，事务回滚）。
-
-### 2. 成功共识交易：`probe_target(1)`
-- **交易 Hash**：`0x03c5b525e12f81cf36f64edc30095af6fd0bfe3b921097b34e3b2a70e4865960`
-- **目标 URL**：`https://api.drand.sh/public/1`（不可变公开数据，直接返回 200 OK）。
-- **共识判定**：`MAJORITY_AGREE`（共识枚举代码：6）。
-- **验证者投票明细**：
-  - `0x628f4d491b8753Be1eD022f6D920853b8b541937`: `agree`
-  - `0x7eFf7A59cf5cF0aA88817b5683d3F99caac1D4F9`: `agree`
-  - `0xf20Cb474E5be2f56EA6Be925D057c28f458270da`: `agree`
-  - `0xD2762A898b8262acB88024bf7d5Bb4336375cF22`: `idle`
-  - `0xDc5B687ca37c3C65a16Dd456e6Ce4CF8Be2FfC9d`: `idle`
-  （3 票 Agree 迅速达成法定人数 Quorum，无任何 Disagree 异议，成功推进状态机）。
+| 文件名称 | 物理路径 | 文件大小 | 核心审计用途与内容证明 |
+| :--- | :--- | :---: | :--- |
+| **`transaction_receipts.json`** | `audit-package/transaction_receipts.json` | ~681 KB | 记录全部 5 笔交易的原始 RPC 详细记录与回执字段（含 raw calldata、nonce、r/s/v 等） |
+| **`consensus_votes.json`** | `audit-package/consensus_votes.json` | ~86 KB | 记录两笔探测交易中全部验证者节点的独立投票分布、共识枚举代码、执行返回及 Quorum 裁决 |
+| **`readback_results.json`** | `audit-package/readback_results.json` | ~4 KB | 官方 SDK `TransactionHashVariant.LATEST_FINAL` 读回的 Target 0 与 Target 1 状态前后对照 |
+| **`fee_audit.json`** | `audit-package/fee_audit.json` | ~4 KB | 钱包 0 WEI 余额证明、Studionet `eth_gasPrice=0x0` 及免 Gas 机制审计 |
+| **`git_security_audit.md`** | `audit-package/git_security_audit.md` | ~4 KB | 全量 Git 提交历史私钥扫描、SHA-256 指纹比对报告、Commit 演化关系说明与规则审计 |
+| **`git_history.txt`** | `audit-package/git_history.txt` | ~112 KB+ | 包含自初始化至当前节点的完整 `git log -p` 代码差异历史导出 |
 
 ---
 
-## 五、链上 Read-back 终态与前后状态对照 (`readback_results.json`)
+## 三、合约 validate() 的等价性边界与共识证明能力分析 (不夸大共识能力)
 
-使用官方 SDK 的 `TransactionHashVariant.LATEST_FINAL` 对合约进行无歧义的链上读回：
+在 [ProofOfUptime.py](file:///E:/gemini/genlayer-phase4-test/contracts/ProofOfUptime.py) 中，非确定性抓取与等价性验证的核心实现如下：
 
-### 1. 目标总数核验
-- `get_target_count()`：**`2`**（对应 Target 0 与 Target 1 均在链上完成持久化记录）。
-
-### 2. Target 0 状态对照（证明失败共识未污染状态）
-- 探测前初态：`probed_count = 0`, `last_status = "registered"`, `last_result = null`。
-- 探测后终态：`probed_count = 0`, `last_status = "registered"`, `last_result = null`。
-- **判定**：**`PASS (isUnmutated: true)`**，证明共识反对的写交易绝对不会被写入持久状态。
-
-### 3. Target 1 状态对照（证明成功共识已正确持久化）
-- 探测前初态：`probed_count = 0`, `last_status = "registered"`, `last_result = null`。
-- 探测后终态：
-  ```json
-  {
-    "id": 1,
-    "name": "Drand Genesis Round",
-    "url": "https://api.drand.sh/public/1",
-    "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
-    "probed_count": 1,
-    "last_status": "active",
-    "last_result": {
-      "is_alive": true,
-      "sample": "b'{\"round\":1,\"randomness\":\"101297f1ca7dc44ef6088d94ad5fb7ba03455",
-      "status_code": 200
+```python
+def fetch():
+    res = gl.nondet.web.get(target_url)
+    if res.status != 200:
+        raise gl.vm.UserError("Target probe returned non-200 status")
+    body_text = str(res.body)
+    if len(body_text) == 0:
+        raise gl.vm.UserError("Empty response body")
+    return {
+        "status_code": res.status,
+        "is_alive": True,
+        "sample": body_text[:64]
     }
-  }
-  ```
-- **判定**：**`PASS (isUpdated: true)`**，状态成功翻转为 `active`，计数递增为 1，payload 真实留存。
 
-### 4. 集合与单项读取交叉比对
-调用 `list_targets(0, 5)` 返回的 2 个数组元素分别与 `get_target(0)`、`get_target(1)` 的 JSON 结构与数据 **100% 严格一致**（`crossMatch: true`）。
+def validate(leader_result) -> bool:
+    if not isinstance(leader_result, gl.vm.Return):
+        return False
+    leader = leader_result.calldata
+    if not isinstance(leader, dict):
+        return False
+    try:
+        own = fetch()
+    except gl.vm.UserError:
+        return False
+    return (
+        leader.get("status_code") == own.get("status_code")
+        and leader.get("is_alive") == own.get("is_alive")
+    )
+```
 
----
+### 1. 字段级验证范围与等价性边界判定
 
-## 六、费用审计与钱包余额深度核查 (`fee_audit.json`)
+| 字段名称 | 是否纳入 validate() 比较 | 验证范围与约束机制 | 共识证明能力客观声明 |
+| :--- | :---: | :--- | :--- |
+| **`status_code`** | **是 (强制比较)** | `leader.get("status_code") == own.get("status_code")`。<br>要求 Leader 与验证者独立发起的 HTTP 请求状态码必须严格一致（当前实现中非 200 均抛出异常导致验证失败）。 | **强共识证明**：证实目标服务在验证者群体独立访问视角下，HTTP 协议状态码具有确定性一致（例如稳定返回 200）。 |
+| **`is_alive`** | **是 (强制比较)** | `leader.get("is_alive") == own.get("is_alive")`。<br>布尔值，要求 Leader 与验证者均成功收到非空正文（`len(body_text) > 0`）。 | **强共识证明**：证实服务在去中心化多节点探测下处于存活且能响应正文的状态。 |
+| **`sample`** | **否 (未纳入比较)** | 在 `validate()` 返回值中明确**未**包含 `leader.get("sample") == own.get("sample")`。<br>`sample` 仅为 Leader 提案时截取的响应前 64 字节数据。 | **单点采样快照（非全体验证者等价共识）**：链上持久化记录的 `sample` 仅为 Leader 节点的单次抓取切片。**不可宣称为全体验证者对正文字节级逐一比对达成的共识**。 |
 
-1. **测试钱包当前真实余额**：
-   - 原始查询：`eth_getBalance("0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121", "latest")`
-   - 返回值：`0x0`（十进制 `0 WEI`，格式化 `0.000000 GEN`）。
-   - 证明：在发起 1 次部署和 4 次合约写调用后，钱包余额未出现扣减透支或失败欠费。
-2. **协议层与 EVM 手续费机理解析**：
-   - `eth_gasPrice` 查询结果：`0x0`（Gas 单价为 0）；
-   - 5 笔交易实际支付 Gas 费用：**`0 WEI`**；
-   - 协议管理合约核验：Studionet 的 `feeManagerContract`、`stakingContract` 和 `appealsContract` 均显式配置为 `null`；
-   - **审计结论**：当前 Studionet 拓扑设计为开发专用的豁免 Gas 模式，所有交互零代币消耗，这是网络层机制所致，非客户端计算误差。
-
----
-
-## 七、Git 历史安全审计与 Commit 演进核对 (`git_security_audit.md`)
-
-### 1. 私钥指纹扫描与敏感信息防护
-- **扫描方法**：提取一次性测试钱包私钥的 SHA-256 哈希作为比对指纹，遍历仓库全量提交（从 root commit 至当前 HEAD）的所有 patch 补丁与文件内容；
-- **扫描结果**：**0 处私钥匹配泄露**，所有 64 位十六进制字符串均被严格确认为已知的公共交易哈希、Drand 随机数或代码特征，未包含任何私钥明文；
-- **规则覆盖**：`.secrets/` 目录严格受 `.gitignore` 保护，测试私钥物理封存于 `.secrets/wallet.json`，未被暂存，未被跟踪；
-- **个人钱包隔离**：未访问、读取或导入任何用户个人 OKX / MetaMask 钱包。
-
-### 2. 关键 Commit `37baa204b6a2f34b2125e00ce9fd19573963231d` 专项核对
-- **Commit SHA**：`37baa204b6a2f34b2125e00ce9fd19573963231d`
-- **提交信息**：`feat(phase4): ProofOfUptime successful consensus closure and on-chain state verification`
-- **作者与时间**：GenLayer Autonomous Agent, 2026-11-16 03:44:32 +0800
-- **演进关系说明**：
-  - 前序 Commit `cc4b6cf`：包含初始智能合约源码、单元测试及部署脚本；
-  - 本次 Commit `37baa20`：引入成功共识闭环脚本 `run_success_consensus.js`，固化闭环证据 `evidence_closure.json`，归档初版验收报告；
-  - 后续 Commit `3425c92`：将闭环验收总结报告写入版本库。
-- **变更文件清单**：
-  ```text
-  A  GENLAYER_PHASE4_ACCEPTANCE_REPORT.md
-  A  evidence_closure.json
-  A  run_success_consensus.js
-  ```
+### 2. 设计取舍与客观结论
+- **工程合理性**：不比对 `sample` 允许了目标服务正文中存在微小动态差异（如动态毫秒时间戳、请求追踪 ID 等），防止由于正文字符级微小不一致导致合法服务被判定为共识失败。
+- **边界声明**：GenLayer 验证者群体达成的是**目标服务“在指定探测时刻可正常访问且返回 HTTP 200”的存活性与状态码共识**；并未对响应内容进行全量逐字节的不可变证明。
 
 ---
 
-## 八、Phase 4 最终独立审计判定
+## 四、五笔真实链上交易与费用记录完整性核验
 
-根据对链上原始数据、验证者共识投票记录、只读状态机变迁、费用机制与 Git 历史安全的综合审计：
+所有交易哈希、状态码与执行结果在历次审计中**未被任何修改**，均可基于底层 RPC 完整复现：
 
-1. **成功共识与失败共识**：两笔交易均已达到不可逆终态（FINALIZED），分别达成 `MAJORITY_AGREE` 与 `MAJORITY_DISAGREE`，具备完整的验证者多节点投票证据。
-2. **状态变迁与隔离**：成功共识驱动状态机翻转为 `active` 并递增计数，失败共识严格未修改持久状态，对照证据闭环。
-3. **真实性与可复现性**：全部 5 笔交易的原始 JSON、共识投票、只读结果与费用分析已完整沉淀在 `audit-package/` 目录下，证据链真实有效。
-4. **安全与合规性**：未发生私钥泄露，未触碰个人主网钱包，符合全部安全与工程规范。
+| # | 交易操作 | 完整交易哈希 (Tx Hash) | 最终状态 | 耗时 | 共识/执行结果 | 实际 Gas 费用 |
+| :-: | :--- | :--- | :-: | :-: | :---: | :---: |
+| **1** | **合约部署** | `0x95062b39e8cae8be5307927b445728c34529353c264e57c167283bd63a4c8bcb` | `FINALIZED` (7) | 41.5s | SUCCESS (部署落链) | `0 WEI` |
+| **2** | **注册 Target 0** | `0xd541429e2aebce353ff8fb82daf677675d82d5ce17468e8816df2dd3296ec976` | `FINALIZED` (7) | 39.6s | SUCCESS (注册完成) | `0 WEI` |
+| **3** | **探测 Target 0** | `0xc53d6b6eb5e8d1e37a2707ec5f3e2615c49b000634ff6b195f5f25f78b5b6fa8` | `FINALIZED` (7) | 64.7s | **`MAJORITY_DISAGREE`** | `0 WEI` |
+| **4** | **注册 Target 1** | `0xf40b36b0d857f03039207a5c0f124d00e7c1ebf916a4dd00f036d7f1430c4ae7` | `FINALIZED` (7) | 37.8s | SUCCESS (注册完成) | `0 WEI` |
+| **5** | **探测 Target 1** | `0x03c5b525e12f81cf36f64edc30095af6fd0bfe3b921097b34e3b2a70e4865960` | `FINALIZED` (7) | 39.7s | **`MAJORITY_AGREE`** | `0 WEI` |
 
-**最终独立审计结论**：**`PHASE 4 — FULLY VERIFIED`**
+- **钱包与费用状态**：钱包地址 `0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121` 余额保持 `0 WEI`，网络 `eth_gasPrice` 恒为 `0x0`，全流程免 Gas 执行无任何欠费阻断。
+
+---
+
+## 五、两笔探测交易共识与链上状态读回对照
+
+### 1. 验证者投票 Quorum 对照
+- **Target 0 (`probe_target(0)`)**：
+  - 目标地址：`https://1.1.1.1`（服务端返回 301 永久重定向）
+  - 验证者投票：3 个活跃验证者全部投出 `disagree`，达成 `MAJORITY_DISAGREE`。
+  - 链上状态：`last_status = "registered"`, `probed_count = 0`，未受污染。
+- **Target 1 (`probe_target(1)`)**：
+  - 目标地址：`https://api.drand.sh/public/1`（返回 200 OK，正文确定）
+  - 验证者投票：3 个活跃验证者全部投出 `agree`，达成 `MAJORITY_AGREE`。
+  - 链上状态：`last_status` 成功翻转为 `"active"`，`probed_count` 递增为 `1`。
+
+### 2. SDK 读回交叉验证
+使用官方 SDK `TransactionHashVariant.LATEST_FINAL` 调用 `get_target_count()` 读回值为 `2`；调用 `list_targets(0, 5)` 返回列表与逐个调用 `get_target(0)`、`get_target(1)` 的 JSON 结构 100% 严格一致。
+
+---
+
+## 六、Git 历史演进与 Commit 对应关系统一
+
+以实际 `git log` 为唯一准则，梳理提交历史中各个关键 Commit 的定位与完整 SHA：
+
+```text
+* 7519b79 (HEAD -> master) docs(audit): finalize audit package with all 5 transaction receipts, consensus votes, and security report
+* 3425c92 docs(phase4): add final closure report GENLAYER_PHASE4_FINAL_CLOSURE_REPORT.md
+* 37baa20 feat(phase4): ProofOfUptime successful consensus closure and on-chain state verification
+* cc4b6cf feat(phase4): ProofOfUptime Intelligent Contract implementation, Studionet deployment and evidence verification
+```
+
+### 关键 Commit 职责定义
+1. **初始实现与部署 Commit**：
+   - 完整 SHA：`cc4b6cf6e64ae0e6105ad8649e765001eefdccf4`
+   - 提交信息：`feat(phase4): ProofOfUptime Intelligent Contract implementation, Studionet deployment and evidence verification`
+   - 作用：包含合约源码、单元测试、部署脚本及 Target 0 失败探测证据。
+2. **核心闭环 Commit**：
+   - 完整 SHA：`37baa204b6a2f34b2125e00ce9fd19573963231d`
+   - 提交信息：`feat(phase4): ProofOfUptime successful consensus closure and on-chain state verification`
+   - 作用：实现 Target 1 成功共识闭环，固化 `evidence_closure.json` 与 `run_success_consensus.js`。
+3. **初版报告 Commit**：
+   - 完整 SHA：`3425c92431f4d9b3d25d901112af38ddca539827`
+   - 提交信息：`docs(phase4): add final closure report GENLAYER_PHASE4_FINAL_CLOSURE_REPORT.md`
+4. **审计包归档 Commit**：
+   - 完整 SHA：`7519b79b2ca9b547eb0d318526f794ccdbb6bc0a`
+   - 提交信息：`docs(audit): finalize audit package with all 5 transaction receipts, consensus votes, and security report`
+5. **最终交付收尾 HEAD Commit**：
+   - 本次文档与扫描更新入库后的最新 Git HEAD 完整 SHA（见最终汇报）。
+
+---
+
+## 七、Git 安全扫描结论与环境隔离保障
+
+- **测试私钥安全**：测试私钥存放于受保护忽略目录 `.secrets/wallet.json`，全量历史 SHA-256 指纹比对 **0 命中、0 泄露**。
+- **个人钱包隔离**：测试过程未读取、导出或调用任何个人钱包（OKX / MetaMask）凭证。
+- **合约状态保全**：未对链上已部署合约做任何修改，未发起任何无授权的额外交易。
+
+**总结判定**：**`PHASE 4 — FULLY VERIFIED`**
