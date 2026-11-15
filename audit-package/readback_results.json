@@ -1,0 +1,103 @@
+{
+  "auditTimestamp": "2026-11-15T19:57:06.059Z",
+  "contractAddress": "0x613Ccb8a943179c0d56c2A194F69261f7108F82A",
+  "readMethod": "client.readContract",
+  "transactionHashVariant": "TransactionHashVariant.LATEST_FINAL",
+  "totalTargetsCount": 2,
+  "target0": {
+    "description": "Cloudflare DNS (Probed with failure outcome)",
+    "raw": "{\"id\": 0, \"name\": \"Cloudflare DNS\", \"url\": \"https://1.1.1.1\", \"creator\": \"0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121\", \"probed_count\": 0, \"last_status\": \"registered\", \"last_result\": null}",
+    "parsed": {
+      "id": 0,
+      "name": "Cloudflare DNS",
+      "url": "https://1.1.1.1",
+      "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+      "probed_count": 0,
+      "last_status": "registered",
+      "last_result": null
+    },
+    "stateComparison": {
+      "beforeProbe": {
+        "probed_count": 0,
+        "last_status": "registered",
+        "last_result": null
+      },
+      "afterProbe": {
+        "id": 0,
+        "name": "Cloudflare DNS",
+        "url": "https://1.1.1.1",
+        "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+        "probed_count": 0,
+        "last_status": "registered",
+        "last_result": null
+      },
+      "isUnmutated": true
+    }
+  },
+  "target1": {
+    "description": "Drand Genesis Round (Probed with success outcome)",
+    "raw": "{\"id\": 1, \"name\": \"Drand Genesis Round\", \"url\": \"https://api.drand.sh/public/1\", \"creator\": \"0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121\", \"probed_count\": 1, \"last_status\": \"active\", \"last_result\": {\"is_alive\": true, \"sample\": \"b'{\\\"round\\\":1,\\\"randomness\\\":\\\"101297f1ca7dc44ef6088d94ad5fb7ba03455\", \"status_code\": 200}}",
+    "parsed": {
+      "id": 1,
+      "name": "Drand Genesis Round",
+      "url": "https://api.drand.sh/public/1",
+      "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+      "probed_count": 1,
+      "last_status": "active",
+      "last_result": {
+        "is_alive": true,
+        "sample": "b'{\"round\":1,\"randomness\":\"101297f1ca7dc44ef6088d94ad5fb7ba03455",
+        "status_code": 200
+      }
+    },
+    "stateComparison": {
+      "beforeProbe": {
+        "probed_count": 0,
+        "last_status": "registered",
+        "last_result": null
+      },
+      "afterProbe": {
+        "id": 1,
+        "name": "Drand Genesis Round",
+        "url": "https://api.drand.sh/public/1",
+        "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+        "probed_count": 1,
+        "last_status": "active",
+        "last_result": {
+          "is_alive": true,
+          "sample": "b'{\"round\":1,\"randomness\":\"101297f1ca7dc44ef6088d94ad5fb7ba03455",
+          "status_code": 200
+        }
+      },
+      "isUpdated": true
+    }
+  },
+  "listTargets": {
+    "raw": "[{\"id\": 0, \"name\": \"Cloudflare DNS\", \"url\": \"https://1.1.1.1\", \"creator\": \"0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121\", \"probed_count\": 0, \"last_status\": \"registered\", \"last_result\": null}, {\"id\": 1, \"name\": \"Drand Genesis Round\", \"url\": \"https://api.drand.sh/public/1\", \"creator\": \"0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121\", \"probed_count\": 1, \"last_status\": \"active\", \"last_result\": {\"is_alive\": true, \"sample\": \"b'{\\\"round\\\":1,\\\"randomness\\\":\\\"101297f1ca7dc44ef6088d94ad5fb7ba03455\", \"status_code\": 200}}]",
+    "parsed": [
+      {
+        "id": 0,
+        "name": "Cloudflare DNS",
+        "url": "https://1.1.1.1",
+        "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+        "probed_count": 0,
+        "last_status": "registered",
+        "last_result": null
+      },
+      {
+        "id": 1,
+        "name": "Drand Genesis Round",
+        "url": "https://api.drand.sh/public/1",
+        "creator": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+        "probed_count": 1,
+        "last_status": "active",
+        "last_result": {
+          "is_alive": true,
+          "sample": "b'{\"round\":1,\"randomness\":\"101297f1ca7dc44ef6088d94ad5fb7ba03455",
+          "status_code": 200
+        }
+      }
+    ],
+    "crossMatch": true
+  }
+}

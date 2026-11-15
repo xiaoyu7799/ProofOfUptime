@@ -1,0 +1,156 @@
+{
+  "auditTimestamp": "2026-11-15T19:57:06.787Z",
+  "network": {
+    "name": "Genlayer Studio Network",
+    "chainId": 61999,
+    "rpc": "https://studio.genlayer.com/api"
+  },
+  "walletAddress": "0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121",
+  "currentBalance": {
+    "rawHex": "0x0",
+    "decWei": "0",
+    "genFormatted": "0.000000 GEN"
+  },
+  "networkFeeParameters": {
+    "eth_gasPrice": "0x0",
+    "gasPriceDec": "0",
+    "isGaslessNetwork": true,
+    "stakingContract": null,
+    "feeManagerContract": null,
+    "roundsStorageContract": null,
+    "appealsContract": null
+  },
+  "transactionFeesAnalysis": [
+    {
+      "key": "deploy",
+      "hash": "0x95062b39e8cae8be5307927b445728c34529353c264e57c167283bd63a4c8bcb",
+      "type": 1,
+      "gasUsed": 0,
+      "gasPrice": "0x0",
+      "actualFeePaidWei": "0",
+      "validatorGasUsed": [
+        {
+          "address": "0x29e027b307e32d2FB76825aB3cB21bcF79A433Aa",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x7eFf7A59cf5cF0aA88817b5683d3F99caac1D4F9",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x173a86dBe046c0c6aA3A48Bb8dd9d20c001a2ac1",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x628f4d491b8753Be1eD022f6D920853b8b541937",
+          "gasUsed": 0
+        }
+      ]
+    },
+    {
+      "key": "registerTarget0",
+      "hash": "0xd541429e2aebce353ff8fb82daf677675d82d5ce17468e8816df2dd3296ec976",
+      "type": 2,
+      "gasUsed": 0,
+      "gasPrice": "0x0",
+      "actualFeePaidWei": "0",
+      "validatorGasUsed": [
+        {
+          "address": "0x5D4dD8d9f034c2fC742A1bE9C6d71D985d4D5Ac4",
+          "gasUsed": 0
+        },
+        {
+          "address": "0xDc3C84a9Bc42d0b91219c27B00bbbA8CA0F0259A",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x29e027b307e32d2FB76825aB3cB21bcF79A433Aa",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x628f4d491b8753Be1eD022f6D920853b8b541937",
+          "gasUsed": 0
+        }
+      ]
+    },
+    {
+      "key": "probeTarget0Failure",
+      "hash": "0xc53d6b6eb5e8d1e37a2707ec5f3e2615c49b000634ff6b195f5f25f78b5b6fa8",
+      "type": 2,
+      "gasUsed": 0,
+      "gasPrice": "0x0",
+      "actualFeePaidWei": "0",
+      "validatorGasUsed": [
+        {
+          "address": "0xeA908540c5FBB68Da844cC1BE5eaC8b23391e908",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x5D4dD8d9f034c2fC742A1bE9C6d71D985d4D5Ac4",
+          "gasUsed": 0
+        },
+        {
+          "address": "0xDc3C84a9Bc42d0b91219c27B00bbbA8CA0F0259A",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x7d74A02562B3C443A6b12FE7996Bc5c9A578554E",
+          "gasUsed": 0
+        }
+      ]
+    },
+    {
+      "key": "registerTarget1",
+      "hash": "0xf40b36b0d857f03039207a5c0f124d00e7c1ebf916a4dd00f036d7f1430c4ae7",
+      "type": 2,
+      "gasUsed": 0,
+      "gasPrice": "0x0",
+      "actualFeePaidWei": "0",
+      "validatorGasUsed": [
+        {
+          "address": "0xDc3C84a9Bc42d0b91219c27B00bbbA8CA0F0259A",
+          "gasUsed": 0
+        },
+        {
+          "address": "0xd608c9ABb63F1776c7F0EE447194d8D7ea441b8b",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x0533e32Ae90B9065476eB89C2Bb655eCD98764BD",
+          "gasUsed": 0
+        },
+        {
+          "address": "0xf20Cb474E5be2f56EA6Be925D057c28f458270da",
+          "gasUsed": 0
+        }
+      ]
+    },
+    {
+      "key": "probeTarget1Success",
+      "hash": "0x03c5b525e12f81cf36f64edc30095af6fd0bfe3b921097b34e3b2a70e4865960",
+      "type": 2,
+      "gasUsed": 0,
+      "gasPrice": "0x0",
+      "actualFeePaidWei": "0",
+      "validatorGasUsed": [
+        {
+          "address": "0xf20Cb474E5be2f56EA6Be925D057c28f458270da",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x628f4d491b8753Be1eD022f6D920853b8b541937",
+          "gasUsed": 0
+        },
+        {
+          "address": "0x7eFf7A59cf5cF0aA88817b5683d3F99caac1D4F9",
+          "gasUsed": 0
+        },
+        {
+          "address": "0xDc5B687ca37c3C65a16Dd456e6Ce4CF8Be2FfC9d",
+          "gasUsed": 0
+        }
+      ]
+    }
+  ],
+  "auditConclusion": "On GenLayer Stable Studionet (61999), transactions are intrinsically gasless because eth_gasPrice is 0x0 and protocol fee manager contracts (feeManagerContract, appealsContract) are not enabled (null). No balance deduction occurred across all 5 transactions."
+}
