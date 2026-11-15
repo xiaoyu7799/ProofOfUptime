@@ -1,6 +1,11 @@
 PUBLIC GIT COMMIT SUMMARY — PATH-REDACTED
-Snapshot cutoff: 911e28b396ce580caffc0d43bfba71e12ef5f777
+Snapshot cutoff: caa2cb344110461c1328b2684f07fa120ba73a9f
 This file contains commit metadata only. The security scanner checks raw git log -p for credentials without exporting full patches.
+
+commit caa2cb344110461c1328b2684f07fa120ba73a9f
+Author: xiaoyu7799
+Date: 2026-11-15T22:01:57Z
+    docs(audit): publish compact sanitized commit history
 
 commit 911e28b396ce580caffc0d43bfba71e12ef5f777
 Author: xiaoyu7799
