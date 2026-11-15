@@ -1,0 +1,23 @@
+{
+  "name": "proof-of-uptime",
+  "version": "1.0.0",
+  "description": "Decentralized Service Availability Oracle on GenLayer",
+  "main": "run_success_consensus.js",
+  "scripts": {
+    "test:unit": "python tests/unit_test.py",
+    "export:audit": "node export_audit_data.js",
+    "scan:security": "node scan_git_security.js"
+  },
+  "keywords": [
+    "genlayer",
+    "intelligent-contract",
+    "oracle",
+    "uptime",
+    "consensus"
+  ],
+  "author": "xiaoyu7799",
+  "license": "MIT",
+  "dependencies": {
+    "genlayer-js": "^1.1.8"
+  }
+}

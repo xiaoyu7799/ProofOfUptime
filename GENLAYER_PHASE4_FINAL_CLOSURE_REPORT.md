@@ -17,24 +17,24 @@
 
 | 交付维度 | 实际完成状态 | 详细状态说明与核验凭据 |
 | :--- | :---: | :--- |
-| **1. 链上验收状态** | **`COMPLETED` (已完成/已验证)** | 合约部署、两次目标注册、失败探测（301 触发 `MAJORITY_DISAGREE` 回滚）、成功探测（200 达成 `MAJORITY_AGREE` 推进）及 `LATEST_FINAL` 链上读回验证全部闭环，5 笔交易全部达成 `FINALIZED` (状态码 7)。 |
-| **2. Git 本地归档状态** | **`COMPLETED` (已完成/工作区干净)** | 本地仓库提交历史完整连续，六份审计原始文件全部物理落盘于 `audit-package/` 并在本地提交，工作树保持绝对干净，敏感私钥隔离完好。 |
-| **3. GitHub 远程推送状态** | **`NOT COMPLETED` (未完成/本地隔离)** | 本地仓库未配置任何远程仓库 URL（`git remote -v` 为空），所有提交与证据均完整保存在本地 Git 仓库中。根据严格交付红线，**未向远程 GitHub 推送，禁止标为已完成**。 |
+| **1. 链上验收状态** | **`COMPLETED` (已完成 / 全流程闭环)** | 合约部署、两次目标注册、失败探测（301 触发 `MAJORITY_DISAGREE` 回滚）、成功探测（200 达成 `MAJORITY_AGREE` 推进）及 `LATEST_FINAL` 链上读回验证全部闭环，**全部 5 笔真实链上交易状态均为 `FINALIZED` (状态码 7)**。 |
+| **2. Git 本地归档状态** | **`COMPLETED` (已完成 / 仓库干净)** | 本地仓库提交历史完整连续，六份审计原始文件全部物理落盘于 `audit-package/` 并在本地完成结构化提交，工作树保持绝对干净，敏感私钥隔离完好。 |
+| **3. GitHub 远程推送状态** | **`PENDING_REMOTE` (未完成 / 本地隔离就绪)** | 本地仓库未配置任何远程仓库 URL（`git remote -v` 为空），所有提交与证据均完整保存在本地 Git 仓库中。根据严格交付红线，**未向远程 GitHub 推送，禁止标为已完成**。 |
 
 ---
 
-## 二、审计归档六份文件清单真实性核验
+## 二、审计归档六份文件清单与 SHA-256 完整性核验
 
-所有链上底层回执、验证者共识投票记录、状态机读回快照、费用审计及 Git 安全扫描文件真实存在于 `audit-package/` 目录：
+所有链上底层回执、验证者共识投票记录、状态机读回快照、费用审计及 Git 安全扫描文件真实存在于 `audit-package/` 目录，经精确物理读取与哈希计算，完整性数据如下：
 
-| 文件名称 | 物理路径 | 文件大小 | 核心审计用途与内容证明 |
-| :--- | :--- | :---: | :--- |
-| **`transaction_receipts.json`** | `audit-package/transaction_receipts.json` | ~681 KB | 记录全部 5 笔交易的原始 RPC 详细记录与回执字段（含 raw calldata、nonce、r/s/v 等） |
-| **`consensus_votes.json`** | `audit-package/consensus_votes.json` | ~86 KB | 记录两笔探测交易中全部验证者节点的独立投票分布、共识枚举代码、执行返回及 Quorum 裁决 |
-| **`readback_results.json`** | `audit-package/readback_results.json` | ~4 KB | 官方 SDK `TransactionHashVariant.LATEST_FINAL` 读回的 Target 0 与 Target 1 状态前后对照 |
-| **`fee_audit.json`** | `audit-package/fee_audit.json` | ~4 KB | 钱包 0 WEI 余额证明、Studionet `eth_gasPrice=0x0` 及免 Gas 机制审计 |
-| **`git_security_audit.md`** | `audit-package/git_security_audit.md` | ~4 KB | 全量 Git 提交历史私钥扫描、SHA-256 指纹比对报告、Commit 演化关系说明与规则审计 |
-| **`git_history.txt`** | `audit-package/git_history.txt` | ~112 KB+ | 包含自初始化至当前节点的完整 `git log -p` 代码差异历史导出 |
+| 文件名称 | 物理路径 | 实际大小 (Bytes) | SHA-256 完整性哈希 | 核心审计用途与内容证明 |
+| :--- | :--- | :---: | :--- | :--- |
+| **`transaction_receipts.json`** | `audit-package/transaction_receipts.json` | 681,506 | `6ee2df5025aa2a9c96b89837eea7dac33b3f2b93392f67d8eed01c5603620f0b` | 记录全部 5 笔交易的原始 RPC 详细记录与回执字段（含 raw calldata、nonce、r/s/v 等） |
+| **`consensus_votes.json`** | `audit-package/consensus_votes.json` | 86,162 | `4322b63304ac5c3888f7c54bbaa409c2a0faf267fa4910688085c7667c39dc01` | 记录两笔探测交易中全部验证者节点的独立投票分布、共识枚举代码、执行返回及 Quorum 裁决 |
+| **`readback_results.json`** | `audit-package/readback_results.json` | 4,116 | `8ef334ac1b2802a0d3b839bd85845d9511608586d67075fbce50989bddf2a888` | 官方 SDK `TransactionHashVariant.LATEST_FINAL` 读回的 Target 0 与 Target 1 状态前后对照 |
+| **`fee_audit.json`** | `audit-package/fee_audit.json` | 4,403 | `8a776dcd7334087f579e3c1dd17b54bc4784ff0f3d757b3aff6cb8e67e259d1f` | 钱包 0 WEI 余额证明、Studionet `eth_gasPrice=0x0` 及免 Gas 机制审计 |
+| **`git_security_audit.md`** | `audit-package/git_security_audit.md` | 5,387 | `79101d0f008d9fcaeb4fcc414ed3635692c3d1fa0c5155b5e7ba62d8f315b416` | 全量 Git 提交历史私钥扫描、SHA-256 指纹比对报告、Commit 演化关系说明与规则审计 |
+| **`git_history.txt`** | `audit-package/git_history.txt` | 905,887 | `1c99ccffbd21bc19dd0bd6a496566acd9f2260005b08ff36522980d00ff0f098` | 包含自初始化至当前节点的完整 `git log -p` 代码差异补丁历史导出 |
 
 ---
 
@@ -124,7 +124,8 @@ def validate(leader_result) -> bool:
 以实际 `git log` 为唯一准则，梳理提交历史中各个关键 Commit 的定位与完整 SHA：
 
 ```text
-* 7519b79 (HEAD -> master) docs(audit): finalize audit package with all 5 transaction receipts, consensus votes, and security report
+* 3f68963 (HEAD -> master) docs(closure): finalize Phase 4 delivery, equivalence boundaries, and status distinction
+* 7519b79 docs(audit): finalize audit package with all 5 transaction receipts, consensus votes, and security report
 * 3425c92 docs(phase4): add final closure report GENLAYER_PHASE4_FINAL_CLOSURE_REPORT.md
 * 37baa20 feat(phase4): ProofOfUptime successful consensus closure and on-chain state verification
 * cc4b6cf feat(phase4): ProofOfUptime Intelligent Contract implementation, Studionet deployment and evidence verification
@@ -145,8 +146,9 @@ def validate(leader_result) -> bool:
 4. **审计包归档 Commit**：
    - 完整 SHA：`7519b79b2ca9b547eb0d318526f794ccdbb6bc0a`
    - 提交信息：`docs(audit): finalize audit package with all 5 transaction receipts, consensus votes, and security report`
-5. **最终交付收尾 HEAD Commit**：
-   - 本次文档与扫描更新入库后的最新 Git HEAD 完整 SHA（见最终汇报）。
+5. **交付收尾 Commit**：
+   - 完整 SHA：`3f68963324d57ddfdb2bba8dec9d3312b254530d`
+   - 提交信息：`docs(closure): finalize Phase 4 delivery, equivalence boundaries, and status distinction`
 
 ---
 
