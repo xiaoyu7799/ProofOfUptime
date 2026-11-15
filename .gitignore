@@ -1,0 +1,18 @@
+# Secret & sensitive files - strictly forbidden to track
+.secrets/
+*.key
+*.pem
+*.env
+*.env.*
+*private*
+*mnemonic*
+*wallet.json
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# OS & Logs
+.DS_Store
+Thumbs.db
+*.log
