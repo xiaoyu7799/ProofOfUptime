@@ -16,3 +16,6 @@ package-lock.json
 .DS_Store
 Thumbs.db
 *.log
+
+# Local delivery summary - not for public repo
+FINAL_DELIVERY_SUMMARY.md
