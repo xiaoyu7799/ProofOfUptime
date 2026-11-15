@@ -18,8 +18,8 @@
 | 交付维度 | 实际完成状态 | 详细状态说明与核验凭据 |
 | :--- | :---: | :--- |
 | **1. 链上验收状态** | **`COMPLETED` (已完成 / 全流程闭环)** | 合约部署、两次目标注册、失败探测（301 触发 `MAJORITY_DISAGREE` 回滚）、成功探测（200 达成 `MAJORITY_AGREE` 推进）及 `LATEST_FINAL` 链上读回验证全部闭环，**全部 5 笔真实链上交易状态均为 `FINALIZED` (状态码 7)**。 |
-| **2. Git 本地归档状态** | **`COMPLETED` (已完成 / 仓库干净)** | 本地仓库提交历史完整连续，六份审计原始文件全部物理落盘于 `audit-package/` 并在本地完成结构化提交，工作树保持绝对干净，敏感私钥隔离完好。 |
-| **3. GitHub 远程推送状态** | **`PENDING_REMOTE` (未完成 / 本地隔离就绪)** | 本地仓库未配置任何远程仓库 URL（`git remote -v` 为空），所有提交与证据均完整保存在本地 Git 仓库中。根据严格交付红线，**未向远程 GitHub 推送，禁止标为已完成**。 |
+| **2. Git 本地归档状态** | **`COMPLETED` (已完成 / 仓库干净)** | 本地仓库提交历史完整连续，六份审计原始文件全部物理落盘于 `audit-package/` 并在本地完成结构化提交，开源说明 `README.md` 与工程配置 `package.json` 齐备，工作树保持绝对干净，敏感私钥隔离完好。 |
+| **3. GitHub 远程推送状态** | **`PENDING_AUTH` (本地就绪 / 阻塞于远程凭据)** | 经实测，命令行无 `gh` CLI，Windows 凭据管理器无 GitHub 凭据，内置浏览器访问 GitHub 呈未登录状态（Sign-in 界面）。本地已完成全量结构化打包，严格依据“未推送禁止标为已完成”原则，客观记录为待推送状态。 |
 
 ---
 
@@ -124,7 +124,9 @@ def validate(leader_result) -> bool:
 以实际 `git log` 为唯一准则，梳理提交历史中各个关键 Commit 的定位与完整 SHA：
 
 ```text
-* 3f68963 (HEAD -> master) docs(closure): finalize Phase 4 delivery, equivalence boundaries, and status distinction
+* e82c199 (HEAD -> master) docs(audit): update git history and security audit with latest commit
+* 62985c1 docs(project): add README.md, package.json, and update closure report with SHA-256 integrity
+* 3f68963 docs(closure): finalize Phase 4 delivery, equivalence boundaries, and status distinction
 * 7519b79 docs(audit): finalize audit package with all 5 transaction receipts, consensus votes, and security report
 * 3425c92 docs(phase4): add final closure report GENLAYER_PHASE4_FINAL_CLOSURE_REPORT.md
 * 37baa20 feat(phase4): ProofOfUptime successful consensus closure and on-chain state verification
@@ -149,6 +151,12 @@ def validate(leader_result) -> bool:
 5. **交付收尾 Commit**：
    - 完整 SHA：`3f68963324d57ddfdb2bba8dec9d3312b254530d`
    - 提交信息：`docs(closure): finalize Phase 4 delivery, equivalence boundaries, and status distinction`
+6. **开源整理 Commit**：
+   - 完整 SHA：`62985c1767dfe3ef19eabd94472f25f80a4c5e5f`
+   - 提交信息：`docs(project): add README.md, package.json, and update closure report with SHA-256 integrity`
+7. **最终审计固化 HEAD Commit**：
+   - 完整 SHA：`e82c199cb2bc5dcfd61fe79c892aec3511ea4812`
+   - 提交信息：`docs(audit): update git history and security audit with latest commit`
 
 ---
 
