@@ -12,10 +12,16 @@
 node_modules/
 package-lock.json
 
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Local delivery summary - not for public repo
+FINAL_DELIVERY_SUMMARY.md
+
 # OS & Logs
 .DS_Store
 Thumbs.db
 *.log
-
-# Local delivery summary - not for public repo
-FINAL_DELIVERY_SUMMARY.md

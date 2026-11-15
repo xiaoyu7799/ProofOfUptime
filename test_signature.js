@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { createAccount } = require('E:/gemini/node_modules/genlayer-js');
+const { createAccount } = require('genlayer-js');
 
 const secretPath = path.join(__dirname, '.secrets', 'wallet.json');
 const secret = JSON.parse(fs.readFileSync(secretPath, 'utf8'));
@@ -20,7 +20,7 @@ async function run() {
   console.log('Signature:', sig);
 
   // 2. 验证签名恢复
-  const { recoverMessageAddress } = require('E:/gemini/node_modules/viem');
+  const { recoverMessageAddress } = require('viem');
   const recovered = await recoverMessageAddress({ message, signature: sig });
   console.log('Recovered Address:', recovered);
   console.log('Signature Recovery Match:', recovered.toLowerCase() === account.address.toLowerCase());

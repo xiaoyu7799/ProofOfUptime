@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const { createClient, createAccount, chains } = require('E:/gemini/node_modules/genlayer-js');
-const { TransactionHashVariant, TransactionStatus } = require('E:/gemini/node_modules/genlayer-js/dist/types/index.cjs');
+const { createClient, createAccount, chains } = require('genlayer-js');
+const { TransactionHashVariant, TransactionStatus } = require('genlayer-js/types');
 
 async function main() {
   console.log('=== GENLAYER PHASE 4 REAL STUDIONET DEPLOYMENT & EXECUTION ===');

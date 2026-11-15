@@ -9,7 +9,7 @@ ProofOfUptime 是基于 GenLayer 智能合约（Intelligent Contract）实现的
 - **去中心化状态探测**：利用 GenVM 的 `gl.nondet.web.get` 接口，由多个验证者独立向目标 URL 发起实时 HTTP GET 探测。
 - **等价性共识机制**：验证者独立执行 `fetch` 并通过 `validate` 校验 Leader 提案的状态码与存活性标志位是否一致。
 - **自动状态回滚与保护**：当目标服务异常（如 HTTP 301 重定向、404 未找到、500 服务端故障）导致验证者分歧时，链上达成 `MAJORITY_DISAGREE`，业务状态自动回滚，历史数据不受污染。
-- **免 Gas 协议设计**：适配 GenLayer Stable Studionet 网络特性，全流程 0 Gas 费用运行。
+- **费用模型明确界定**：真实记录链上 Gas 消耗（`gasUsed = 8,000,000`），基于 Studionet `effectiveGasPrice = 0 WEI`，实现零代币消耗部署与调用。
 - **完备的链上读回验证**：支持基于 `LATEST_FINAL` 的单项与分页查询，状态机严格可复现。
 
 ---
@@ -23,6 +23,7 @@ ProofOfUptime 是基于 GenLayer 智能合约（Intelligent Contract）实现的
 - **合约部署交易**：`0x95062b39e8cae8be5307927b445728c34529353c264e57c167283bd63a4c8bcb` (FINALIZED)
 - **合约源代码**：`contracts/ProofOfUptime.py`
 - **SDK 依赖**：`genlayer-js: ^1.1.8`
+- **公开 GitHub 仓库**：https://github.com/xiaoyu7799/ProofOfUptime
 
 ---
 
@@ -104,16 +105,16 @@ def validate(leader_result) -> bool:
 
 本项目在 Stable Studionet 上完成了 5 笔真实的链上交互，全部达成不可逆的 `FINALIZED`（状态码 7）：
 
-| # | 交易操作 | 完整交易哈希 (Tx Hash) | 状态 | 共识判定 | 耗时 |
-| :-: | :--- | :--- | :-: | :-: | :-: |
-| **1** | **合约部署** | `0x95062b39e8cae8be5307927b445728c34529353c264e57c167283bd63a4c8bcb` | `FINALIZED` | SUCCESS | 41.5s |
-| **2** | **注册 Target 0** | `0xd541429e2aebce353ff8fb82daf677675d82d5ce17468e8816df2dd3296ec976` | `FINALIZED` | SUCCESS | 39.6s |
-| **3** | **探测 Target 0** | `0xc53d6b6eb5e8d1e37a2707ec5f3e2615c49b000634ff6b195f5f25f78b5b6fa8` | `FINALIZED` | `MAJORITY_DISAGREE` | 64.7s |
-| **4** | **注册 Target 1** | `0xf40b36b0d857f03039207a5c0f124d00e7c1ebf916a4dd00f036d7f1430c4ae7` | `FINALIZED` | SUCCESS | 37.8s |
-| **5** | **探测 Target 1** | `0x03c5b525e12f81cf36f64edc30095af6fd0bfe3b921097b34e3b2a70e4865960` | `FINALIZED` | `MAJORITY_AGREE` | 39.7s |
+| # | 交易操作 | 完整交易哈希 (Tx Hash) | 状态 | 共识判定 | Gas 使用量 | 有效 Gas 单价 | 实际手续费 | 耗时 |
+| :-: | :--- | :--- | :-: | :-: | :-: | :-: | :-: | :-: |
+| **1** | **合约部署** | `0x95062b39e8cae8be5307927b445728c34529353c264e57c167283bd63a4c8bcb` | `FINALIZED` | SUCCESS | 8,000,000 | 0 WEI | 0 WEI | 41.5s |
+| **2** | **注册 Target 0** | `0xd541429e2aebce353ff8fb82daf677675d82d5ce17468e8816df2dd3296ec976` | `FINALIZED` | SUCCESS | 8,000,000 | 0 WEI | 0 WEI | 39.6s |
+| **3** | **负向探测 Target 0** | `0xc53d6b6eb5e8d1e37a2707ec5f3e2615c49b000634ff6b195f5f25f78b5b6fa8` | `FINALIZED` | `MAJORITY_DISAGREE` | 8,000,000 | 0 WEI | 0 WEI | 64.7s |
+| **4** | **注册 Target 1** | `0xf40b36b0d857f03039207a5c0f124d00e7c1ebf916a4dd00f036d7f1430c4ae7` | `FINALIZED` | SUCCESS | 8,000,000 | 0 WEI | 0 WEI | 37.8s |
+| **5** | **正向探测 Target 1** | `0x03c5b525e12f81cf36f64edc30095af6fd0bfe3b921097b34e3b2a70e4865960` | `FINALIZED` | `MAJORITY_AGREE` | 8,000,000 | 0 WEI | 0 WEI | 39.7s |
 
-- **失败共识闭环**：Target 0（Cloudflare DNS `https://1.1.1.1`）因服务端返回 301 永久重定向触发合约非 200 保护，3 票 Disagree 达成 Quorum，状态安全回滚。
-- **成功共识闭环**：Target 1（Drand Genesis `https://api.drand.sh/public/1`）稳定返回 200 OK，3 票 Agree 达成 Quorum，状态成功翻转为 `active`。
+- **负向共识闭环**：Target 0（Cloudflare DNS `https://1.1.1.1`）因服务端返回 301 永久重定向触发合约非 200 保护，3 票 Disagree 达成 Quorum，状态安全回滚。
+- **正向共识闭环**：Target 1（Drand Genesis `https://api.drand.sh/public/1`）稳定返回 200 OK，3 票 Agree 达成 Quorum，状态成功翻转为 `active`。
 
 ---
 
@@ -121,14 +122,17 @@ def validate(leader_result) -> bool:
 
 所有原始链上回执、投票详情与状态机回读快照均归档在 `audit-package/` 目录中：
 
-| 文件名称 | 物理大小 (Bytes) | SHA-256 完整性哈希 | 说明 |
+| 文件名称 | 物理大小 (Bytes) | SHA-256 完整性哈希 | 核心用途与说明 |
 | :--- | :-: | :--- | :--- |
-| `transaction_receipts.json` | 681,506 | `6ee2df5025aa2a9c96b89837eea7dac33b3f2b93392f67d8eed01c5603620f0b` | 5 笔交易完整 RPC 回执 |
-| `consensus_votes.json` | 86,162 | `4322b63304ac5c3888f7c54bbaa409c2a0faf267fa4910688085c7667c39dc01` | 两笔探测交易投票分布 |
-| `readback_results.json` | 4,116 | `8ef334ac1b2802a0d3b839bd85845d9511608586d67075fbce50989bddf2a888` | LATEST_FINAL 状态读回对照 |
-| `fee_audit.json` | 4,403 | `8a776dcd7334087f579e3c1dd17b54bc4784ff0f3d757b3aff6cb8e67e259d1f` | 钱包余额与 0 Gas 费用审计 |
-| `git_security_audit.md` | 5,387 | `79101d0f008d9fcaeb4fcc414ed3635692c3d1fa0c5155b5e7ba62d8f315b416` | Git 历史与私钥 0 泄露审计 |
-| `git_history.txt` | 905,887 | `1c99ccffbd21bc19dd0bd6a496566acd9f2260005b08ff36522980d00ff0f098` | 全量 git log -p 补丁历史 |
+| `transaction_receipts.json` | 681,506 | `6ee2df5025aa2a9c96b89837eea7dac33b3f2b93392f67d8eed01c5603620f0b` | 5 笔交易完整 RPC 底层回执 |
+| `consensus_votes.json` | 86,162 | `4322b63304ac5c3888f7c54bbaa409c2a0faf267fa4910688085c7667c39dc01` | 两笔探测交易全部验证者投票分布 |
+| `readback_results.json` | 4,116 | `8ef334ac1b2802a0d3b839bd85845d9511608586d67075fbce50989bddf2a888` | LATEST_FINAL 状态前后读回比对快照 |
+| `fee_audit.json` | 4,948 | `5f17d946bdb2156db3b514f950434cbdb42f23bb7c7f443b59232c0794b10732` | 区分 gasUsed 与 actualFeePaid 的费用审计 |
+| `git_security_audit.md` | 8,433 | `f8b4c5197649adedef5ef7e2eeda57a98b1d98af1bd3838db221aa8978162971` | 工作区与 Git 历史安全扫描与私钥 0 泄露报告 |
+| `git_history.txt` | 1,030,567 | `9162d4c4efadb33f40e9126237e2778f6aad3e8db9961e7a03c86b7a844c1e8f` | 截止至 Commit `d08fc2e` 的完整提交历史补丁快照 |
+
+> [!NOTE]
+> `git_history.txt` 记录截止到 Commit `d08fc2e5bd5cb6ff57181526eae46d64b8f16c6f` 为止的补丁历史快照，避免自身提交导致的循环自引用。
 
 ---
 
@@ -140,6 +144,6 @@ def validate(leader_result) -> bool:
 
 ---
 
-## 开源协议
+## 许可证
 
-本项目采用 MIT 协议开源。
+本项目采用 MIT 许可证开源，详情参阅 [LICENSE](./LICENSE)。

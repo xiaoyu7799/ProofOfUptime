@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { createAccount, generatePrivateKey } = require('E:/gemini/node_modules/genlayer-js');
+const { createAccount, generatePrivateKey } = require('genlayer-js');
 
 const secretsDir = path.join(__dirname, '.secrets');
 if (!fs.existsSync(secretsDir)) {

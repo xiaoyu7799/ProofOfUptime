@@ -1,4 +1,4 @@
-const { createClient, chains } = require('E:/gemini/node_modules/genlayer-js');
+const { createClient, chains } = require('genlayer-js');
 
 async function checkTx() {
   const client = createClient({ chain: chains.studionet });

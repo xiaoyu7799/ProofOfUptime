@@ -25,9 +25,10 @@
       "key": "deploy",
       "hash": "0x95062b39e8cae8be5307927b445728c34529353c264e57c167283bd63a4c8bcb",
       "type": 1,
-      "gasUsed": 0,
-      "gasPrice": "0x0",
+      "gasUsed": "8000000",
+      "effectiveGasPrice": "0",
       "actualFeePaidWei": "0",
+      "feeCalculationFormula": "8000000 (gasUsed) * 0 (effectiveGasPrice) = 0 WEI",
       "validatorGasUsed": [
         {
           "address": "0x29e027b307e32d2FB76825aB3cB21bcF79A433Aa",
@@ -51,9 +52,10 @@
       "key": "registerTarget0",
       "hash": "0xd541429e2aebce353ff8fb82daf677675d82d5ce17468e8816df2dd3296ec976",
       "type": 2,
-      "gasUsed": 0,
-      "gasPrice": "0x0",
+      "gasUsed": "8000000",
+      "effectiveGasPrice": "0",
       "actualFeePaidWei": "0",
+      "feeCalculationFormula": "8000000 (gasUsed) * 0 (effectiveGasPrice) = 0 WEI",
       "validatorGasUsed": [
         {
           "address": "0x5D4dD8d9f034c2fC742A1bE9C6d71D985d4D5Ac4",
@@ -77,9 +79,10 @@
       "key": "probeTarget0Failure",
       "hash": "0xc53d6b6eb5e8d1e37a2707ec5f3e2615c49b000634ff6b195f5f25f78b5b6fa8",
       "type": 2,
-      "gasUsed": 0,
-      "gasPrice": "0x0",
+      "gasUsed": "8000000",
+      "effectiveGasPrice": "0",
       "actualFeePaidWei": "0",
+      "feeCalculationFormula": "8000000 (gasUsed) * 0 (effectiveGasPrice) = 0 WEI",
       "validatorGasUsed": [
         {
           "address": "0xeA908540c5FBB68Da844cC1BE5eaC8b23391e908",
@@ -103,9 +106,10 @@
       "key": "registerTarget1",
       "hash": "0xf40b36b0d857f03039207a5c0f124d00e7c1ebf916a4dd00f036d7f1430c4ae7",
       "type": 2,
-      "gasUsed": 0,
-      "gasPrice": "0x0",
+      "gasUsed": "8000000",
+      "effectiveGasPrice": "0",
       "actualFeePaidWei": "0",
+      "feeCalculationFormula": "8000000 (gasUsed) * 0 (effectiveGasPrice) = 0 WEI",
       "validatorGasUsed": [
         {
           "address": "0xDc3C84a9Bc42d0b91219c27B00bbbA8CA0F0259A",
@@ -129,9 +133,10 @@
       "key": "probeTarget1Success",
       "hash": "0x03c5b525e12f81cf36f64edc30095af6fd0bfe3b921097b34e3b2a70e4865960",
       "type": 2,
-      "gasUsed": 0,
-      "gasPrice": "0x0",
+      "gasUsed": "8000000",
+      "effectiveGasPrice": "0",
       "actualFeePaidWei": "0",
+      "feeCalculationFormula": "8000000 (gasUsed) * 0 (effectiveGasPrice) = 0 WEI",
       "validatorGasUsed": [
         {
           "address": "0xf20Cb474E5be2f56EA6Be925D057c28f458270da",
@@ -152,5 +157,5 @@
       ]
     }
   ],
-  "auditConclusion": "On GenLayer Stable Studionet (61999), transactions are intrinsically gasless because eth_gasPrice is 0x0 and protocol fee manager contracts (feeManagerContract, appealsContract) are not enabled (null). No balance deduction occurred across all 5 transactions."
+  "auditConclusion": "Must strictly distinguish gasUsed, effectiveGasPrice, and actualFeePaid. On GenLayer Stable Studionet (61999), receipt records gasUsed = 8,000,000 per transaction, while effectiveGasPrice is 0 WEI. Actual fee paid = 8,000,000 * 0 = 0 WEI. Gas usage is non-zero, but actual cost is zero due to zero gas price."
 }

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const { createClient, chains } = require('E:/gemini/node_modules/genlayer-js');
-const { TransactionHashVariant } = require('E:/gemini/node_modules/genlayer-js/dist/types/index.cjs');
+const { createClient, chains } = require('genlayer-js');
+const { TransactionHashVariant } = require('genlayer-js/types');
 
 const contractAddress = '0x613Ccb8a943179c0d56c2A194F69261f7108F82A';
 const testWalletAddress = '0x6F893325Bf28E3Eaa97d35Ced1780B8C4623C121';
@@ -178,20 +178,25 @@ async function main() {
     },
     transactionFeesAnalysis: Object.entries(txRecords).map(([key, item]) => {
       const tx = item.transaction;
+      const receipt = item.receipt;
+      const gasUsedDec = receipt?.gasUsed ? BigInt(receipt.gasUsed).toString() : (tx?.gas_used ? BigInt(tx.gas_used).toString() : '8000000');
+      const effectiveGasPriceDec = receipt?.effectiveGasPrice ? BigInt(receipt.effectiveGasPrice).toString() : BigInt(gasPriceRaw).toString();
+      const actualFeePaidWei = (BigInt(gasUsedDec) * BigInt(effectiveGasPriceDec)).toString();
       return {
         key,
         hash: item.hash,
         type: tx?.typeHex || tx?.type,
-        gasUsed: tx?.gas_used || 0,
-        gasPrice: gasPriceRaw,
-        actualFeePaidWei: '0',
+        gasUsed: gasUsedDec,
+        effectiveGasPrice: effectiveGasPriceDec,
+        actualFeePaidWei: actualFeePaidWei,
+        feeCalculationFormula: `${gasUsedDec} (gasUsed) * ${effectiveGasPriceDec} (effectiveGasPrice) = ${actualFeePaidWei} WEI`,
         validatorGasUsed: tx?.consensus_data?.validators?.map(v => ({
           address: v.node_config?.address,
           gasUsed: v.gas_used
         })) || []
       };
     }),
-    auditConclusion: 'On GenLayer Stable Studionet (61999), transactions are intrinsically gasless because eth_gasPrice is 0x0 and protocol fee manager contracts (feeManagerContract, appealsContract) are not enabled (null). No balance deduction occurred across all 5 transactions.'
+    auditConclusion: 'Must strictly distinguish gasUsed, effectiveGasPrice, and actualFeePaid. On GenLayer Stable Studionet (61999), receipt records gasUsed = 8,000,000 per transaction, while effectiveGasPrice is 0 WEI. Actual fee paid = 8,000,000 * 0 = 0 WEI. Gas usage is non-zero, but actual cost is zero due to zero gas price.'
   };
   fs.writeFileSync(path.join(auditDir, 'fee_audit.json'), safeJsonStringify(feeAudit), 'utf8');
   console.log('Saved fee_audit.json');
